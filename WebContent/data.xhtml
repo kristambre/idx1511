@@ -1,0 +1,6 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+	<h:outputText rendered="#{sessionController.loggedInUser eq null}" value="Not authorized!" />
+	<h:panelGroup rendered="#{sessionController.loggedInUser ne null}">
+		<f:event type="preRenderView" listener="#{javascriptController.renderJson()}" />
+	</h:panelGroup>
+</ui:composition>

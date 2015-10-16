@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+                                          xmlns:c="http://java.sun.com/jstl/core">
+	<ui:define name="content">
+	<c:set value="#{updateController.document.document}" var="docId"/>
+		<h:form id="update">
+			<table border="1">
+				<tr bgcolor="#99999">
+					<td><h:outputText value="ID:" /></td>
+					<td><h:outputText value="#{updateController.document.document}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Type:" /></td>
+					<td><h:outputText value="#{updateController.documentType.typeName}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Created at:" /></td>
+					<td><h:outputText value="#{updateController.document.created}" /></td>
+				</tr>
+				<tr>
+					<td><br /></td>
+					<td><br /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Name:" /></td>
+					<td><h:inputText value="#{updateController.document.name}" id="name" />
+						<h:message for="name" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Description:" /></td>
+					<td><h:inputText value="#{updateController.document.description}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Catalog:" /></td>
+					<td><h:selectOneMenu value="#{updateController.documentCatalog.name}">
+							<f:selectItems value="#{updateController.allCatalogues}" var="cat" itemLabel="#{cat.name}" itemValue="#{cat.name}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Document status:" /></td>
+					<td><h:selectOneMenu value="#{updateController.documentStatusType.typeName}">
+							<f:selectItems value="#{updateController.allTypes}" var="type" itemLabel="#{type.typeName}" itemValue="#{type.typeName}" />
+						</h:selectOneMenu></td>
+				</tr>
+			</table>
+			<br />
+			<h:panelGroup rendered="#{updateController.documentAttributes.size() ne 0}" id="attr">
+				<table border="1">
+					<thead>
+						<h:outputText value="Document attributes" />
+					</thead>
+					<ui:repeat value="#{updateController.documentAttributes}" var="attr" varStatus="attrStatus">
+						<tr>
+							<td><h:outputText value="#{attr.typeName}" /></td>
+							<td><h:inputText id="attrInput" value="#{attr.valueText}" rendered="#{attr.dataType.unscaledValue() ne 4}" /> <h:selectOneMenu id="attrSelect" value="#{attr.atrTypeSelectionValueFk}"
+									rendered="#{attr.dataType eq 4}">
+									<f:selectItems value="#{updateController.allSelectionValues}" var="selection" itemLabel="#{selection.valueText}" itemValue="#{selection.atrTypeSelectionValue}" />
+								</h:selectOneMenu>
+								<h:message for="attrInput" /></td>
+						</tr>
+					</ui:repeat>
+				</table>
+			</h:panelGroup>
+			<h:commandButton action="#{updateController.update()}" value="Update" />
+		</h:form>
+		<br/>
+		<br/>
+		<h:outputText value="Document/Subject relations:" />
+		<h:panelGroup id="addSubjects">
+			<h:form>
+				<h:commandButton id="addConnectionBtn" action="#{additionController.addSubjectConnection()}" value="Add connection to subject">
+					<f:ajax execute="@this" render=":addSubjects" />
+				</h:commandButton>
+			</h:form>
+			<br />
+				<h:form id="connForm" prependId="false">
+					<table>
+						<tr>
+							<td><h:outputText value="Relation type:" /></td>
+							<td><h:outputText value="Subject type:" /></td>
+							<td><h:outputText value="Subject id:" /></td>
+							<td><h:outputText value="Note:" /></td>
+						</tr>
+						<ui:repeat value="#{additionController.documentSubjectConnectionsToAdd}" var="conn" varStatus="connStatus">
+							<tr>
+								<td><h:selectOneMenu id="connType" value="#{conn.docSubjectRelationTypeFk}">
+										<f:selectItems value="#{additionController.documentSubjectRelationTypes}" var="type" itemLabel="#{type.typeName}" itemValue="#{type.docSubjectRelationType}"/>
+									</h:selectOneMenu></td>
+								<td><h:selectOneMenu id="connSubjectType" value="#{conn.docSubjectTypeFk}">
+										<f:selectItems value="#{additionController.documentSubjectTypes}" var="type" itemLabel="#{type.typeName}" itemValue="#{type.docSubjectType}"/>
+									</h:selectOneMenu></td>
+								<td><h:inputText id="connSubjectId" value="#{conn.subjectFk}" /></td>
+								<td><h:inputText id="note" value="#{conn.note}" /></td>
+								<td><h:commandButton action="#{additionController.removeSubjectConnection(conn)}" value="Remove">
+										<f:ajax execute="@this" render=":addSubjects" />
+									</h:commandButton></td>
+							</tr>
+						</ui:repeat>
+					</table>
+					<h:commandButton action="#{additionController.addConnection()}" value="Add connections" />
+				</h:form>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

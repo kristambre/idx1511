@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="content">
+		<h:form id="searchForm">
+			<table>
+				<tr>
+					<td><h:outputLabel for="id" value="ID:" /></td>
+					<td><h:inputText id="id" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="name" value="Name:" /></td>
+					<td><h:inputText id="name" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="description" value="Description:" /></td>
+					<td><h:inputText id="description" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="lastUpdater" value="Last updater:" /></td>
+					<td><h:inputText id="lastUpdater" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="catalog" value="Catalog:" /></td>
+					<td><h:selectOneMenu id="catalog">
+							<f:selectItem value="#{null}" itemLabel="Choose one..." itemValue="#{null}" />
+							<f:selectItems value="#{searchController.allCatalogues}" var="catalog" itemValue="#{catalog.docCatalog}" itemLabel="#{catalog.name}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="subject" value="Subject:" /></td>
+					<td><h:inputText id="subject" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="status" value="Status:" /></td>
+					<td><h:selectOneMenu id="status">
+							<f:selectItem value="#{null}" itemLabel="Choose one..." itemValue="#{null}" />
+							<f:selectItems value="#{searchController.allStatuses}" var="status" itemValue="#{status.docStatusType}" itemLabel="#{status.typeName}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="attrVal" value="Attribute value:" /></td>
+					<td><h:inputText id="attrVal" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel for="type" value="Type:" /></td>
+					<td><h:selectOneMenu id="type">
+							<f:selectItem value="#{null}" itemLabel="Choose one..." itemValue="#{null}" />
+							<f:selectItems value="#{searchController.allTypes}" var="type" itemValue="#{type.docType}" itemLabel="#{type.typeName}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:commandButton value="Search" action="#{searchController.search()}">
+							<f:ajax execute="@form" render=":results" />
+						</h:commandButton></td>
+				</tr>
+			</table>
+		</h:form>
+		<h:panelGroup id="results">
+			<table>
+				<ui:repeat value="#{searchController.results}" var="res" varStatus="status">
+					<tr>
+						<td><h:outputText value="#{res.name}" /></td>
+					</tr>
+				</ui:repeat>
+			</table>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="head">
+		<script src="resources/jquery-2.1.4.min.js" />
+		<script src="resources/entity/doc.js" />
+		<script src="resources/entity/attribute.js" />
+		<script src="resources/view/view.js" />
+		<script src="resources/controller/dao.js" />
+	</ui:define>
+	<ui:define name="content">
+		<table border="1">
+			<thead>
+				<h:outputText value="Document data:" />
+			</thead>
+			<ui:repeat value="#{indexController.documents}" var="doc" varStatus="docStatus">
+				<h:panelGroup rendered="#{catalogController.isCurrentCatalogContainsDocument(doc)}">
+					<tr>
+						<td bgcolor="#99999"><h:outputText value="#{doc.name}" /></td>
+						<td><a href="#" onclick="getData(#{doc.document})">Details</a></td>
+						<td><h:form>
+								<h:commandLink action="#{indexController.deleteAllForDocument(doc.document)}" value="Delete" />
+							</h:form></td>
+						<td><h:form>
+								<h:link outcome="update?id=#{doc.document}" value="Update" />
+							</h:form></td>
+							<td><h:form>
+								<h:commandLink action="#{catalogController.addToBuffer(doc.document)}" value="Add to buffer" />
+							</h:form></td>
+					</tr>
+				</h:panelGroup>
+			</ui:repeat>
+		</table>
+		<div id="attributes" style="display:none;">
+		<table border="1" id="detailsTable">
+			<tr bgcolor="#99999">
+				<td><span>ID:</span></td>
+				<td><span id="id"></span></td>
+			</tr>
+			<tr>
+				<td><span>Name:</span></td>
+				<td><span id="name"></span></td>
+			</tr>
+			<tr>
+				<td><span>Type:</span></td>
+				<td><span id="type"></span></td>
+			</tr>
+			<tr>
+				<td><span>Catalog:</span></td>
+				<td><span id="catalog"></span></td>
+			</tr>
+			<tr>
+				<td><span>Description:</span></td>
+				<td><span id="description"></span></td>
+			</tr>
+			<tr>
+				<td><span>Created at:</span></td>
+				<td><span id="createdAt"></span></td>
+			</tr>
+			<tr>
+				<td><span>Created by:</span></td>
+				<td><span id="createdBy"></span></td>
+			</tr>
+			<tr>
+				<td><span>Document status:</span></td>
+				<td><span id="status"></span></td>
+			</tr>
+		</table>
+		<br/>
+			Document attributes:
+			<table border="1" id="attrTable">
+		</table>
+		<button onclick="closeTable()">Close</button>
+		</div>
+	</ui:define>
+</ui:composition>

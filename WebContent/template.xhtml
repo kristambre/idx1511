@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<title><ui:insert name="title">Documents</ui:insert></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<ui:insert name="head"></ui:insert>
+</h:head>
+
+<h:body>
+	<div id="top">
+		<ui:insert name="header">
+			<h:panelGroup rendered="#{sessionController.loggedInUser ne null}">
+				<div align="center" style="margin-bottom: 5px;">
+					<h:link outcome="index" value="Index"></h:link>
+					<br />
+					<h:link outcome="add" value="Add document"></h:link>
+					<br />
+					<h:link outcome="buffer" value="Buffer"></h:link>
+				</div>
+				<div align="left" style="margin-bottom: 20px;">
+					<h:button outcome="search" value="Search..." />
+				</div>
+				<div align="right" style="margin-top: -50px">
+					<h:outputText value="Logged in as #{sessionController.loggedInUser.firstName} #{sessionController.loggedInUser.lastName}" rendered="#{sessionController.loggedInUser ne null}" />
+					<br />
+					<h:form>
+						<h:commandButton action="#{sessionController.logout()}" value="Log out" />
+					</h:form>
+				</div>
+				<hr />
+				<br />
+				<h:panelGroup>
+					<h:form>
+						<h:commandLink action="#{catalogController.setCurrentCatalog(null)}" value="root" />
+					</h:form>
+					<ui:repeat value="#{catalogController.catalogues}" var="cat" varStatus="catStatus">
+						<h:form>
+							<h:commandLink action="#{catalogController.setCurrentCatalog(cat)}" value="#{cat.name}" rendered="#{cat.upperCatalogFk eq 0}" />
+						</h:form>
+						<h:panelGroup rendered="#{catalogController.getSubcatalogsFor(cat.docCatalog).size() ne 0}">
+							<ui:repeat value="#{catalogController.getSubcatalogsFor(cat.docCatalog)}" var="subCat" varStatus="subStatus">
+								<h:form>
+									<h:commandLink action="#{catalogController.setCurrentCatalog(subCat)}" value=".../#{subCat.name}" />
+								</h:form>
+							</ui:repeat>
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+				<br />
+				<h:outputText value="Current location: #{catalogController.currentCatalog eq null?'root':catalogController.currentCatalog.name}" />
+				<hr />
+				<br />
+			</h:panelGroup>
+		</ui:insert>
+	</div>
+	<div id="content">
+		<h:panelGroup rendered="#{sessionController.loggedInUser ne null}">
+			<ui:insert name="content" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{sessionController.loggedInUser eq null}">
+			<h:outputText value="You need to be logged in to see the content! You can do that " />
+			<h:link outcome="/login" value="here!" />
+		</h:panelGroup>
+	</div>
+	<div id="bottom">
+		<ui:insert name="footer">
+			<br />
+			<br />
+			<br />
+			<br />
+			<hr />
+			<h:outputText id="serverMessages" value="Server message: " />
+			<h:message for="serverMessages" style="color:#0000ff;" />
+		</ui:insert>
+	</div>
+</h:body>
+</html>

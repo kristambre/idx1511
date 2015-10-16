@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+
+<body>
+	<h:form prependId="false">
+		<h:outputLabel for="username" value="Username:" />
+		<h:inputText id="username" />
+		<br />
+		<h:outputLabel for="password" value="Password:" />
+		<h:inputSecret id="password" />
+		<br/>
+		<h:commandButton action="#{sessionController.login()}" value="Log in" />
+	</h:form>
+	<br />
+	<h:outputText value="Logged in as #{sessionController.loggedInUser.firstName}" rendered="#{sessionController.loggedInUser ne null}"/>
+</body>
+</html>

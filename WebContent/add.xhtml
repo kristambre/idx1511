@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="content">
+		<h:form id="add">
+			<table>
+				<tr>
+					<td bgcolor="#99999"><h:outputText value="Name: " /></td>
+					<td><h:inputText id="name" /> <h:message for="name" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Description: " /></td>
+					<td><h:inputText id="desc" /> <h:message for="desc" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Document status: " /></td>
+					<td><h:selectOneMenu id="status">
+							<f:selectItems value="#{additionController.documentStatuses}" var="status" itemLabel="#{status.typeName}" itemValue="#{status.docStatusType}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Document type: " /></td>
+					<td><h:selectOneMenu id="type">
+							<f:selectItems value="#{additionController.documentTypes}" var="type" itemLabel="#{type.typeName}" itemValue="#{type.docType}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Document catalog: " /></td>
+					<td><h:selectOneMenu id="catalog">
+							<f:selectItems value="#{additionController.documentCatalogues}" var="catalog" itemLabel="#{catalog.name}" itemValue="#{catalog.docCatalog}" />
+						</h:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><br></br></td>
+				</tr>
+			</table>
+			<h:panelGroup id="attributes">
+				<table>
+					<tr>
+						<td><h:outputText value="Document attributes:" /></td>
+						<td><h:commandButton id="addAttrBtn" action="#{additionController.addAttribute()}" value="Add an attribute">
+								<f:ajax execute="addAttrBtn" render=":add:attributes" />
+							</h:commandButton></td>
+					</tr>
+					<ui:repeat value="#{additionController.documentAttributesToAdd}" var="addAttr" varStatus="addAttrStatus">
+						<tr>
+							<td><h:selectOneMenu id="attrId" value="#{addAttr.docAttributeTypeFk}">
+									<f:attribute name="attribute" value="#{addAttr}" />
+									<f:selectItems value="#{additionController.documentAttributes}" var="attr" itemLabel="#{attr.typeName}" itemValue="#{attr.docAttributeType}" />
+									<f:ajax listener="#{additionController.selectMenuListener}" render="attrInput" />
+								</h:selectOneMenu></td>
+							<td><h:panelGroup id="attrInput">
+									<h:inputText type="text" id="attrVal" rendered="#{addAttr.dataType.unscaledValue() ne 4}" />
+									<h:selectOneMenu id="attrValSel" rendered="#{addAttr.dataType.unscaledValue() eq 4}">
+										<f:selectItems value="#{additionController.documentAttributesSelectionList}" var="sel" itemLabel="#{sel.valueText}" itemValue="#{sel.atrTypeSelectionValue}" />
+									</h:selectOneMenu>
+									<h:message for="attrVal" />
+								</h:panelGroup></td>
+							<td><h:commandButton action="#{additionController.documentAttributesToAdd.remove(addAttr)}" value="Remove">
+									<f:ajax render=":add:attributes" />
+								</h:commandButton></td>
+						</tr>
+					</ui:repeat>
+				</table>
+			</h:panelGroup>
+			<h:commandButton action="#{additionController.add()}" value="Save!" />
+		</h:form>
+	</ui:define>
+</ui:composition>
